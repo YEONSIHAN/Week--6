@@ -1,0 +1,84 @@
+//main.cpp
+#include <iostream>
+#include <vector>
+#include "Excel.h"
+using namespace std;
+
+int main() {
+    vector<Excel<int>> book;
+    int balance = 0; // 초기 잔액
+
+    cout << "초기 잔액을 입력하세요: ";
+    cin >> balance;
+
+    while (true) {
+        string date, detail;
+        int income, expense;
+
+        cout << "\n거래 날짜(예: 2025-10-18, 종료하려면 end 입력): ";
+        cin >> date;
+        if (date == "end") break;
+
+        cout << "거래 내용: ";
+        cin >> detail;
+        cout << "수입 금액 (없으면 0): ";
+        cin >> income;
+        cout << "지출 금액 (없으면 0): ";
+        cin >> expense;
+
+        balance = balance + income - expense;
+
+        
+        book.push_back(Excel<int>(date, detail, income, expense, balance));
+    }
+
+    cout << "\n\n==== 거래 내역 ====\n";
+    cout << "날짜\t\t내용\t수입\t지출\t잔액\n";
+    for (auto& row : book)
+        row.printData();
+
+    cout << "\n총 거래 수: " << book.size() << "건\n";
+    cout << "최종 잔액: " << balance << "원\n";
+
+    return 0;
+}
+// Excel.h
+#pragma once
+#include <string>
+#include <iostream>
+using namespace std;
+
+template <typename T>
+class Excel {
+private:
+    string date;
+    string detail;
+    T income;
+    T expense;
+    T balance;
+
+public:
+    Excel() : date(""), detail(""), income(0), expense(0), balance(0) {}
+    Excel(string d, string de, T in, T ex, T bal)
+        : date(d), detail(de), income(in), expense(ex), balance(bal) {
+    }
+
+    void setData(string d, string de, T in, T ex, T bal) {
+        date = d;
+        detail = de;
+        income = in;
+        expense = ex;
+        balance = bal;
+    }
+
+    string getDate() { return date; }
+    string getDetail() { return detail; }
+    T getIncome() { return income; }
+    T getExpense() { return expense; }
+    T getBalance() { return balance; }
+
+    void printData() {
+        cout << date << "\t" << detail << "\t"
+            << income << "\t" << expense << "\t" << balance << endl;
+    }
+};
